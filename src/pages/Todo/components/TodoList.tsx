@@ -1,6 +1,5 @@
-import { Accordion, Button, ButtonGroup, Flex } from '@chakra-ui/react';
-import { DeleteIcon, EditIcon } from '@chakra-ui/icons';
-import { TodoItem } from '../../../components/composed/Todo/TodoItem';
+import { Accordion, Flex, Text } from '@chakra-ui/react';
+import { TodoItem } from '../../../components/Todo/TodoItem';
 import { ITodo, TodoPriority } from '../../../models/Todo/todo.model';
 
 // fakeData
@@ -43,25 +42,20 @@ const todos: ITodo[] = [
 export function TodoList() {
   return (
     <Flex flexDir='column'>
-      <ButtonGroup justifyContent='flex-end'>
-        <Button
-          aria-label='a'
-          bgColor='blue.500'
-          _hover={{ bgColor: 'blue.700' }}
-          leftIcon={<EditIcon />}
-        >
-          Edit ToDos
-        </Button>
-        <Button
-          aria-label='a'
-          leftIcon={<DeleteIcon />}
-          bgColor='red.500'
-          _hover={{ bgColor: 'red.700' }}
-        >
-          Delete ToDos
-        </Button>
-      </ButtonGroup>
-
+      <Flex gap='70px'>
+        <Text>
+          Done
+        </Text>
+        <Text w='250px'>
+          Title
+        </Text>
+        <Text>
+          Priority
+        </Text>
+        <Text>
+          Deadline
+        </Text>
+      </Flex>
       <Accordion allowToggle>
         {
           todos.map(todo => (
