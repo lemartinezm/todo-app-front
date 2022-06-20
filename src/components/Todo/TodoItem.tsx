@@ -3,11 +3,24 @@ import { AccordionButton, AccordionIcon, AccordionItem, AccordionPanel, Badge, B
 import { ITodo } from '../../models/Todo/todo.model';
 
 export type TodoItemProps = {
-  todo: ITodo
+  /**
+   * Todo to print
+   */
+  todo: ITodo,
+  /**
+   * Drawer onOpen
+   */
+  onOpen?: any,
+  /**
+   * Set the todo that is going to be updated
+   */
+  setTodoToUpdate: any
 }
 
 export function TodoItem({
-  todo
+  todo,
+  onOpen,
+  setTodoToUpdate
 }: TodoItemProps) {
   return (
     <AccordionItem>
@@ -23,7 +36,7 @@ export function TodoItem({
           </Badge>
 
           <Text>
-            {todo.finishBefore.toLocaleDateString()}
+            {todo.deadline.toLocaleDateString()}
           </Text>
         </Flex>
         <Spacer />
@@ -40,6 +53,10 @@ export function TodoItem({
             bgColor='blue.500'
             _hover={{ bgColor: 'blue.700' }}
             leftIcon={<EditIcon />}
+            onClick={() => {
+              onOpen();
+              setTodoToUpdate(todo);
+            }}
           >
             Edit ToDo
           </Button>

@@ -10,7 +10,7 @@ export interface ITodo {
   name: string,
   description: string,
   createdAt: Date,
-  finishBefore: Date,
+  deadline: Date,
   priority: TodoPriority,
   completed: boolean,
   creator: string | number,
