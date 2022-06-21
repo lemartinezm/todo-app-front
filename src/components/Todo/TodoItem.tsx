@@ -2,7 +2,7 @@ import { DeleteIcon, EditIcon } from '@chakra-ui/icons';
 import { AccordionButton, AccordionIcon, AccordionItem, AccordionPanel, Badge, Button, ButtonGroup, Checkbox, Flex, Spacer, Text } from '@chakra-ui/react';
 import { useContext } from 'react';
 import { ITodo } from '../../models/Todo/todo.model';
-import { todoContext } from '../../pages/Todo/Todo';
+import { todoContext, TodoOperations } from '../../pages/Todo/Todo';
 
 export type TodoItemProps = {
   /**
@@ -46,7 +46,7 @@ export function TodoItem({
             _hover={{ bgColor: 'blue.700' }}
             leftIcon={<EditIcon />}
             onClick={() => {
-              setOperation('edit');
+              setOperation(TodoOperations.EDIT);
               onOpen();
               setTodoToUpdate(todo);
             }}
@@ -58,7 +58,7 @@ export function TodoItem({
             bgColor='red.500'
             _hover={{ bgColor: 'red.700' }}
             onClick={() => {
-              setOperation('delete');
+              setOperation(TodoOperations.DELETE);
               onOpen();
               setTodoToUpdate(todo);
             }}

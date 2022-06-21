@@ -11,7 +11,14 @@ import { ITodo, TodoPriority } from '../../models/Todo/todo.model';
 import { EditTodoForm } from './components/EditTodoForm';
 import { ConfirmDelete } from './components/ConfirmDelete';
 
-// fakeData
+// Operations enum
+export enum TodoOperations {
+  ADD = 'add',
+  EDIT = 'edit',
+  DELETE = 'delete',
+  COMPLETED = 'completed',
+}
+
 const initialTodos: ITodo[] = [];
 
 // To avoid pass props component by component
@@ -37,7 +44,7 @@ export const todoContext = React.createContext<ITodoContext>({
  */
 export function Todo() {
   const [todos, setTodos] = useState<ITodo[]>(initialTodos);
-  const [operation, setOperation] = useState<'add' | 'edit' | 'delete'>('add');
+  const [operation, setOperation] = useState<TodoOperations>(TodoOperations.ADD);
   const { isOpen, onOpen, onClose } = useDisclosure();
 
   // For update the todo
@@ -74,7 +81,10 @@ export function Todo() {
             _hover={{ bgColor: 'blue.700' }}
             leftIcon={<AddIcon />}
             w='fit-content'
-            onClick={onOpen}
+            onClick={() => {
+              setOperation(TodoOperations.ADD);
+              onOpen();
+            }}
           >
             Add ToDo
           </Button>
@@ -84,9 +94,9 @@ export function Todo() {
         </Box>
 
         <CustomDrawer
-          isOpen={(operation === 'add' || operation === 'edit') && isOpen}
+          isOpen={(operation === TodoOperations.ADD || operation === TodoOperations.EDIT) && isOpen}
           onClose={onClose}
-          title='New ToDo'
+          title={`${operation === TodoOperations.ADD ? 'New' : 'Edit'} ToDo`}
         >
           {
             renderForm(operation, todos, setTodos, todoToUpdate, onClose)
@@ -106,8 +116,17 @@ export function Todo() {
   );
 };
 
+/**
+ * Conditional render for forms
+ * @param operation
+ * @param todos
+ * @param setTodos
+ * @param todoToUpdate
+ * @param onClose
+ * @returns
+ */
 function renderForm(operation: string, todos: ITodo[], setTodos: Function, todoToUpdate: ITodo, onClose: Function) {
-  if (operation === 'add') return <NewTodoForm todos={todos} updateTodos={setTodos} onClose={onClose} />;
-  else if (operation === 'edit') return <EditTodoForm todoToUpdate={todoToUpdate} todos={todos} onClose={onClose} updateTodos={setTodos} />;
+  if (operation === TodoOperations.ADD) return <NewTodoForm todos={todos} updateTodos={setTodos} onClose={onClose} />;
+  else if (operation === TodoOperations.EDIT) return <EditTodoForm todoToUpdate={todoToUpdate} todos={todos} onClose={onClose} updateTodos={setTodos} />;
   else return null;
 }
