@@ -7,7 +7,9 @@ import { TodoList } from './components/TodoList';
 import { CustomDrawer } from '../../components/Drawer/CustomDrawer';
 import { NewTodoForm } from './components/NewTodoForm';
 
-import { ITodo } from '../../models/Todo/todo.model';
+import { ITodo, TodoPriority } from '../../models/Todo/todo.model';
+import { EditTodoForm } from './components/EditTodoForm';
+import { ConfirmDelete } from './components/ConfirmDelete';
 
 // fakeData
 const initialTodos: ITodo[] = [];
@@ -16,13 +18,17 @@ const initialTodos: ITodo[] = [];
 interface ITodoContext {
   todos: ITodo[],
   setTodos: Function,
-  onOpen: Function
+  onOpen: Function,
+  setOperation: Function,
+  setTodoToUpdate: Function
 }
 
 export const todoContext = React.createContext<ITodoContext>({
   todos: [],
-  setTodos: () => {},
-  onOpen: () => {}
+  setTodos: () => { },
+  onOpen: () => { },
+  setOperation: () => { },
+  setTodoToUpdate: () => { }
 });
 
 /**
@@ -31,13 +37,29 @@ export const todoContext = React.createContext<ITodoContext>({
  */
 export function Todo() {
   const [todos, setTodos] = useState<ITodo[]>(initialTodos);
+  const [operation, setOperation] = useState<'add' | 'edit' | 'delete'>('add');
   const { isOpen, onOpen, onClose } = useDisclosure();
+
+  // For update the todo
+  const [todoToUpdate, setTodoToUpdate] = useState<ITodo>({
+    _id: '',
+    name: '',
+    description: '',
+    createdAt: new Date(),
+    deadline: new Date(),
+    completed: false,
+    creator: 'Unknown',
+    priority: TodoPriority.NORMAL,
+    __v: 1
+  });
 
   return (
     <todoContext.Provider value={{
       todos,
       setTodos,
-      onOpen
+      onOpen,
+      setOperation,
+      setTodoToUpdate
     }}>
       <Flex
         minH='100vh'
@@ -48,7 +70,6 @@ export function Todo() {
       >
         <Flex flexDir='column' alignItems='flex-end' w='800px'>
           <Button
-            aria-label='a'
             bgColor='blue.500'
             _hover={{ bgColor: 'blue.700' }}
             leftIcon={<AddIcon />}
@@ -59,18 +80,34 @@ export function Todo() {
           </Button>
         </Flex>
         <Box w='800px'>
-          <TodoList todos={todos} updateTodos={setTodos} />
+          <TodoList todos={todos} />
         </Box>
 
         <CustomDrawer
-          isOpen={isOpen}
+          isOpen={(operation === 'add' || operation === 'edit') && isOpen}
           onClose={onClose}
           title='New ToDo'
         >
-          <NewTodoForm todos={todos} updateTodos={setTodos} />
+          {
+            renderForm(operation, todos, setTodos, todoToUpdate, onClose)
+          }
         </CustomDrawer>
+
+        <ConfirmDelete
+          isOpen={operation === 'delete' && isOpen}
+          onClose={onClose}
+          todos={todos}
+          updateTodos={setTodos}
+          todoToUpdate={todoToUpdate}
+        />
       </Flex>
     </todoContext.Provider>
 
   );
 };
+
+function renderForm(operation: string, todos: ITodo[], setTodos: Function, todoToUpdate: ITodo, onClose: Function) {
+  if (operation === 'add') return <NewTodoForm todos={todos} updateTodos={setTodos} onClose={onClose} />;
+  else if (operation === 'edit') return <EditTodoForm todoToUpdate={todoToUpdate} todos={todos} onClose={onClose} updateTodos={setTodos} />;
+  else return null;
+}

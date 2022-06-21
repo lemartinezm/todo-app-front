@@ -160,8 +160,6 @@ export function FormDatePicker({
           }
         </FormControl>
       )}
-
     </Field>
-
   );
 }

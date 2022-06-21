@@ -20,16 +20,17 @@ const validationSchema = Yup.object().shape({
 
 export type NewTodoFormProps = {
   todos: ITodo[],
-  updateTodos: Function
+  updateTodos: Function,
+  onClose: any
 }
 
 export function NewTodoForm({
   todos,
-  updateTodos
+  updateTodos,
+  onClose
 }: NewTodoFormProps) {
   function onSubmit(values: any) {
-    alert(JSON.stringify(values));
-    const temp: any[] = [...todos];
+    const temp: ITodo[] = [...todos];
     temp.push({
       _id: (todos.length + 1).toString(),
       name: values.name,
@@ -42,6 +43,7 @@ export function NewTodoForm({
       __v: 1
     });
     updateTodos(temp);
+    onClose();
   };
 
   return (
