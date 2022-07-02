@@ -1,9 +1,10 @@
 /**
  * Inputs for use with Formik
  */
-import { CalendarIcon } from '@chakra-ui/icons';
+import { CalendarIcon, ViewIcon } from '@chakra-ui/icons';
 import { FormControl, FormErrorMessage, FormLabel, Input, InputGroup, InputRightElement, Select, Textarea } from '@chakra-ui/react';
 import { Field, FieldProps } from 'formik';
+import { useState } from 'react';
 import DatePicker from 'react-datepicker';
 
 // Styles for date picker
@@ -12,7 +13,7 @@ import 'react-datepicker/dist/react-datepicker.css';
 export type FormTextInputProps = {
   name: string,
   label: string,
-  type: string,
+  type: 'text' | 'password',
   placeholder: string
 }
 
@@ -22,22 +23,34 @@ export function FormTextInput({
   type,
   placeholder
 }: FormTextInputProps) {
+  const [showPass, setShowPass] = useState<boolean>(false);
+
   return (
     <Field name={name} >
-      {({ form: { handleChange }, meta: { error }, field: { value } }: FieldProps) => (
-        <FormControl isInvalid={!!error}>
+      {({ form: { handleChange }, meta: { error, touched }, field: { value } }: FieldProps) => (
+        <FormControl isInvalid={!!error && touched}>
           <FormLabel>
             {label}
           </FormLabel>
-          <Input
-            id={name}
-            type={type}
-            value={value}
-            placeholder={placeholder}
-            onChange={handleChange}
-          />
+          <InputGroup>
+            <Input
+              id={name}
+              type={type === 'text' || showPass ? 'text' : 'password'}
+              value={value}
+              placeholder={placeholder}
+              onChange={handleChange}
+            />
+            {
+              type === 'password'
+                ? <InputRightElement onClick={() => setShowPass(!showPass)} cursor='pointer' >
+                  <ViewIcon />
+                </InputRightElement>
+                : null
+            }
+          </InputGroup>
+
           {
-            error
+            touched && !!error
               ? <FormErrorMessage>{error}</FormErrorMessage>
               : null
           }

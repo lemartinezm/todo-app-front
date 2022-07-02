@@ -1,13 +1,14 @@
 import React, { useState } from 'react';
 
-import { Box, Button, Flex, useDisclosure } from '@chakra-ui/react';
+import { Box, Button, Flex, useDisclosure, Text } from '@chakra-ui/react';
 import { AddIcon } from '@chakra-ui/icons';
 
-import { TodoList } from './components/TodoList';
+import { CustomConfetti } from '../../components';
 import { CustomDrawer } from '../../components/Drawer/CustomDrawer';
 import { NewTodoForm } from './components/NewTodoForm';
 
 import { ITodo, TodoPriority } from '../../models/Todo/todo.model';
+import { TodoList } from './components/TodoList';
 import { EditTodoForm } from './components/EditTodoForm';
 import { ConfirmDelete } from './components/ConfirmDelete';
 
@@ -21,13 +22,13 @@ export enum TodoOperations {
 
 const initialTodos: ITodo[] = [];
 
-// To avoid pass props component by component
 interface ITodoContext {
   todos: ITodo[],
   setTodos: Function,
   onOpen: Function,
   setOperation: Function,
-  setTodoToUpdate: Function
+  setTodoToUpdate: Function,
+  handleCompleted: (e?: any) => any
 }
 
 export const todoContext = React.createContext<ITodoContext>({
@@ -35,7 +36,8 @@ export const todoContext = React.createContext<ITodoContext>({
   setTodos: () => { },
   onOpen: () => { },
   setOperation: () => { },
-  setTodoToUpdate: () => { }
+  setTodoToUpdate: () => { },
+  handleCompleted: () => { }
 });
 
 /**
@@ -60,13 +62,22 @@ export function Todo() {
     __v: 1
   });
 
+  // For setCompleted
+  function handleCompleted(todoCompleted: any) {
+    const temp: ITodo[] = [...todos];
+    const index: number = temp.indexOf(todoCompleted);
+    temp[index].completed = !temp[index].completed;
+    setTodos(temp);
+  }
+
   return (
     <todoContext.Provider value={{
       todos,
       setTodos,
       onOpen,
       setOperation,
-      setTodoToUpdate
+      setTodoToUpdate,
+      handleCompleted
     }}>
       <Flex
         minH='100vh'
@@ -75,23 +86,44 @@ export function Todo() {
         alignItems='center'
         w='100%'
       >
-        <Flex flexDir='column' alignItems='flex-end' w='800px'>
-          <Button
-            bgColor='blue.500'
-            _hover={{ bgColor: 'blue.700' }}
-            leftIcon={<AddIcon />}
-            w='fit-content'
-            onClick={() => {
-              setOperation(TodoOperations.ADD);
-              onOpen();
-            }}
-          >
-            Add ToDo
-          </Button>
-        </Flex>
-        <Box w='800px'>
-          <TodoList todos={todos} />
-        </Box>
+        {
+          todos.length >= 1
+            ? <Box w='800px'>
+              <Flex flexDir='column' alignItems='flex-end' w='800px'>
+                <Button
+                  bgColor='blue.500'
+                  _hover={{ bgColor: 'blue.700' }}
+                  leftIcon={<AddIcon />}
+                  w='fit-content'
+                  onClick={() => {
+                    setOperation(TodoOperations.ADD);
+                    onOpen();
+                  }}
+                >
+                  Add ToDo
+                </Button>
+              </Flex>
+              <TodoList todos={todos} />
+            </Box>
+            : <Flex flexDir='column' alignItems='center'>
+              <CustomConfetti />
+              <Text>
+                You don&apos;t have pending ToDos
+              </Text>
+              <Button
+                bgColor='blue.500'
+                _hover={{ bgColor: 'blue.700' }}
+                leftIcon={<AddIcon />}
+                w='fit-content'
+                onClick={() => {
+                  setOperation(TodoOperations.ADD);
+                  onOpen();
+                }}
+              >
+                Add ToDo
+              </Button>
+            </Flex>
+        }
 
         <CustomDrawer
           isOpen={(operation === TodoOperations.ADD || operation === TodoOperations.EDIT) && isOpen}

@@ -14,12 +14,14 @@ export type TodoItemProps = {
 export function TodoItem({
   todo
 }: TodoItemProps) {
-  const { setOperation, setTodoToUpdate, onOpen } = useContext(todoContext); // For drawer and updates defined in the parent (TodoPage)
+  const { setOperation, setTodoToUpdate, onOpen, handleCompleted } = useContext(todoContext); // For drawer and updates defined in the parent (TodoPage)
   return (
     <AccordionItem>
       <AccordionButton>
-        <Flex gap='70px' alignItems='center'>
-          <Checkbox isChecked={todo.completed} />
+        <Flex justifyContent='space-between' alignItems='center' w='100%' mr='20px'>
+          <Checkbox isChecked={todo.completed} onChange={() => {
+            handleCompleted(todo);
+          }} />
           <Text w='250px'>
             {todo.name}
           </Text>

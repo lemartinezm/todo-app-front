@@ -11,38 +11,32 @@ export function TodoList({
 }: TodoListProps) {
   return (
     <>
-      {
-        todos.length >= 1
-          ? <Flex flexDir='column'>
-            <Flex gap='70px'>
-              <Text>
-                Done
-              </Text>
-              <Text w='250px'>
-                Title
-              </Text>
-              <Text>
-                Priority
-              </Text>
-              <Text>
-                Deadline
-              </Text>
-            </Flex>
-            <Accordion allowToggle>
-              {
-                todos.map(todo => (
-                  <TodoItem
-                    todo={todo}
-                    key={todo._id}
-                  />
-                ))
-              }
-            </Accordion >
-          </Flex>
-          : <Text>
-            You don&apos;t have pending ToDos
+      <Flex flexDir='column'>
+        <Flex justifyContent='space-between' py='8px' px='16px'>
+          <Text>
+            Done
           </Text>
-      }
+          <Text w='250px'>
+            Title
+          </Text>
+          <Text>
+            Priority
+          </Text>
+          <Text>
+            Deadline
+          </Text>
+        </Flex>
+        <Accordion allowToggle>
+          {
+            todos.map(todo => (
+              <TodoItem
+                todo={todo}
+                key={todo._id}
+              />
+            ))
+          }
+        </Accordion >
+      </Flex>
     </>
   );
 };
