@@ -1,6 +1,6 @@
-import { Flex, Text, useToast } from '@chakra-ui/react';
+import { Flex, Link, Text, useToast } from '@chakra-ui/react';
 import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { NavLink, useNavigate } from 'react-router-dom';
 import { ILogin } from '../../models/Auth/auth.model';
 import { login } from '../../services/auth.service';
 import { ErrorToast } from '../../utils';
@@ -33,13 +33,19 @@ export function Login() {
   return (
     <Flex flexDir='column' align='center' justify='center' minH='100vh' w='100%'>
       <Text fontSize='2xl' >
-        Iniciar sesión
+        Sign in
       </Text>
 
       <LoginForm
         isLoading={isLoading}
         onSubmit={handleSubmit}
       />
+
+      <Flex>
+        <Link as={NavLink} to='/register'>
+          You don&apos;t have an account? Sign up.
+        </Link>
+      </Flex>
     </Flex>
   );
 };

@@ -1,6 +1,6 @@
 import axios from './config/axios.config';
 import { AxiosResponse } from 'axios';
-import { ILogin } from '../models/Auth/auth.model';
+import { ILogin, IRegister } from '../models/Auth/auth.model';
 
 /**
  * Login function
@@ -9,5 +9,10 @@ import { ILogin } from '../models/Auth/auth.model';
  */
 export const login = async (loginData: ILogin) => {
   const response: AxiosResponse = await axios.post('/auth/login', loginData);
+  return response.data;
+};
+
+export const register = async (registerData: IRegister) => {
+  const response: AxiosResponse = await axios.post('/auth/register', registerData);
   return response.data;
 };

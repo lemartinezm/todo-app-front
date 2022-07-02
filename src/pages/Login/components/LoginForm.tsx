@@ -27,9 +27,8 @@ export function LoginForm({ isLoading = false, onSubmit }: LoginFormProps) {
       validationSchema={loginSchema}
       onSubmit={onSubmit}
     >
-
       <Form>
-        <Flex flexDir='column' gap='20px' w='400px'>
+        <Flex flexDir='column' gap='20px' w={{ base: '100%', sm: '400px' }} p={{ base: '10px', sm: 'none' }}>
           <FormTextInput
             label='Email'
             name='email'
@@ -45,7 +44,7 @@ export function LoginForm({ isLoading = false, onSubmit }: LoginFormProps) {
           />
 
           <Button type='submit' isLoading={isLoading}>
-            Submit
+            Sign in
           </Button>
         </Flex>
       </Form>

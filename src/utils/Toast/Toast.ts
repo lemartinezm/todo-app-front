@@ -7,3 +7,13 @@ export function ErrorToast(toast: any, description: string) {
     isClosable: true
   });
 }
+
+export function SuccessToast(toast: any, description: string) {
+  toast({
+    title: 'Operation completed',
+    description,
+    status: 'success',
+    duration: 5000,
+    isClosable: true
+  });
+};
