@@ -1,8 +1,10 @@
 import { Flex, Link, Text, useToast } from '@chakra-ui/react';
-import { useState } from 'react';
+import { useContext, useState } from 'react';
 import { NavLink, useNavigate } from 'react-router-dom';
+import { LoginContext } from '../../context/LoginContext';
 import { ILogin } from '../../models/Auth/auth.model';
 import { login } from '../../services/auth.service';
+import { getUserInfo } from '../../services/user.service';
 import { ErrorToast } from '../../utils';
 import { LoginForm } from './components/LoginForm';
 
@@ -11,17 +13,30 @@ export function Login() {
   const toast = useToast();
 
   const [isLoading, setIsLoading] = useState<boolean>(false);
+  const { setToken, setUser } = useContext(LoginContext);
 
-  function handleSubmit(values: ILogin) {
+  async function handleSubmit(values: ILogin) {
     setIsLoading(true);
-    login({
+    // First obtain the token with login function
+    await login({
       email: values.email,
       password: values.password,
       remember: values.remember
     })
-      .then(data => {
+      .then(async (data) => {
         localStorage.setItem('token', data.token);
-        navigate('/');
+        setToken(data.token);
+        // Then obtain the user info with getUserInfo
+        await getUserInfo(data.token)
+          .then(res => {
+            setUser(res.users[0]);
+          })
+          .catch(() => {
+            setUser(null);
+            setToken('');
+            localStorage.removeItem('token');
+          });
+        navigate('/dashboard');
       })
       .catch(err => {
         ErrorToast(toast, err.response.data.message);
