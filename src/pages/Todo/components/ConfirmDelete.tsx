@@ -1,29 +1,17 @@
 import { DeleteIcon } from '@chakra-ui/icons';
 import { Button, ButtonGroup, Divider, Modal, ModalBody, ModalCloseButton, ModalContent, ModalFooter, ModalHeader, ModalOverlay } from '@chakra-ui/react';
-import { ITodo } from '../../../models/Todo/todo.model';
 
 export type ConfirmDeleteProps = {
   isOpen: boolean,
   onClose: any,
-  todos: ITodo[],
-  updateTodos: Function,
-  todoToUpdate: ITodo
+  onDelete: () => any,
 }
 
 export function ConfirmDelete({
   isOpen,
   onClose,
-  todos,
-  updateTodos,
-  todoToUpdate
+  onDelete
 }: ConfirmDeleteProps) {
-  function handleConfirm() {
-    const temp: ITodo[] = [...todos];
-    const index: number = temp.indexOf(todoToUpdate);
-    temp.splice(index, 1);
-    updateTodos(temp);
-    onClose();
-  }
   return (
     <Modal isOpen={isOpen} onClose={onClose}>
       <ModalOverlay />
@@ -40,7 +28,7 @@ export function ConfirmDelete({
               leftIcon={<DeleteIcon />}
               bgColor='red.500'
               _hover={{ bgColor: 'red.700' }}
-              onClick={handleConfirm}
+              onClick={() => onDelete()}
             >
               Confirm
             </Button>

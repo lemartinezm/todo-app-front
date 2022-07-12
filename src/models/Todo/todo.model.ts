@@ -6,7 +6,7 @@ export enum TodoPriority {
 }
 
 export interface ITodo {
-  _id: string | number,
+  _id: string,
   name: string,
   description: string,
   createdAt: Date,

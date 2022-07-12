@@ -31,7 +31,7 @@ export function TodoItem({
           </Badge>
 
           <Text>
-            {todo.deadline.toLocaleDateString()}
+            {new Date(todo.deadline).toLocaleDateString()}
           </Text>
         </Flex>
         <Spacer />

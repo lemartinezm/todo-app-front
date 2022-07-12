@@ -22,6 +22,7 @@ function App() {
         await getUserInfo(tokenSaved)
           .then(res => {
             setUser(res.users[0]);
+            setToken(tokenSaved);
           })
           .catch(() => {
             setUser(null);

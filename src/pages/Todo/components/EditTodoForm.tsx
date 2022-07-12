@@ -13,38 +13,20 @@ const validationSchema = Yup.object().shape({
 
 export type EditTodoFormProps = {
   todoToUpdate: ITodo,
-  todos: ITodo[],
-  updateTodos: Function,
-  /**
-   * To Close the drawer after update
-   */
-  onClose?: any
+  onSubmit: (values: any) => any
 }
 
 export function EditTodoForm({
   todoToUpdate,
-  todos,
-  updateTodos,
-  onClose
+  onSubmit
 }: EditTodoFormProps) {
-  function onSubmit(values: any) {
-    const temp: ITodo[] = [...todos];
-    const index = temp.indexOf(todoToUpdate);
-    temp[index].name = values.name;
-    temp[index].description = values.description;
-    temp[index].priority = values.priority;
-    temp[index].deadline = values.deadline;
-    updateTodos(temp);
-    onClose();
-  };
-
   return (
     <Formik
       initialValues={{
         name: todoToUpdate.name,
         description: todoToUpdate.description,
         priority: todoToUpdate.priority,
-        deadline: todoToUpdate.deadline
+        deadline: new Date(todoToUpdate.deadline)
       }}
       validationSchema={validationSchema}
       onSubmit={onSubmit}

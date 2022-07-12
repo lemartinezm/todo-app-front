@@ -5,8 +5,6 @@ import { LoginContext } from '../../context/LoginContext';
 export function ProtectedRoute() {
   const { user } = useContext(LoginContext);
 
-  console.log(user);
-
   if (user) {
     return <Outlet />;
   } else {

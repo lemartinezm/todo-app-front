@@ -2,7 +2,7 @@ import { Button, Flex } from '@chakra-ui/react';
 import { Form, Formik } from 'formik';
 import * as Yup from 'yup';
 import { FormDatePicker, FormSelectInput, FormTextareaInput, FormTextInput } from '../../../components/Inputs/FormInputs';
-import { ITodo, TodoPriority } from '../../../models/Todo/todo.model';
+import { TodoPriority } from '../../../models/Todo/todo.model';
 
 const initialValues: any = {
   name: '',
@@ -19,33 +19,12 @@ const validationSchema = Yup.object().shape({
 });
 
 export type NewTodoFormProps = {
-  todos: ITodo[],
-  updateTodos: Function,
-  onClose: any
+  onSubmit: (values: any) => any
 }
 
 export function NewTodoForm({
-  todos,
-  updateTodos,
-  onClose
+  onSubmit
 }: NewTodoFormProps) {
-  function onSubmit(values: any) {
-    const temp: ITodo[] = [...todos];
-    temp.push({
-      _id: (todos.length + 1).toString(),
-      name: values.name,
-      description: values.description,
-      completed: false,
-      priority: values.priority,
-      createdAt: new Date(),
-      deadline: values.deadline,
-      creator: 'Unknown',
-      __v: 1
-    });
-    updateTodos(temp);
-    onClose();
-  };
-
   return (
     <Formik
       initialValues={initialValues}
