@@ -31,9 +31,7 @@ export function TodoItem({
             {new Date(todo.deadline).toLocaleDateString()}
           </GridItem>
           <GridItem justifySelf='flex-start' alignSelf='center'>
-            <Checkbox isChecked={todo.completed} onChange={() => {
-              handleCompleted(todo);
-            }} />
+            <Checkbox display='flex' alignItems='center' isChecked={todo.completed} onChange={() => handleCompleted(todo)} />
           </GridItem>
         </Grid>
         <Spacer />
