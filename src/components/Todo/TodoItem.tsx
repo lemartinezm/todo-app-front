@@ -1,5 +1,5 @@
 import { DeleteIcon, EditIcon } from '@chakra-ui/icons';
-import { AccordionButton, AccordionIcon, AccordionItem, AccordionPanel, Badge, Button, ButtonGroup, Checkbox, Flex, Spacer, Text } from '@chakra-ui/react';
+import { AccordionButton, AccordionIcon, AccordionItem, AccordionPanel, Badge, Button, ButtonGroup, Checkbox, Grid, GridItem, Spacer, Text } from '@chakra-ui/react';
 import { useContext } from 'react';
 import { ITodo } from '../../models/Todo/todo.model';
 import { todoContext, TodoOperations } from '../../pages/Todo/Todo';
@@ -18,22 +18,24 @@ export function TodoItem({
   return (
     <AccordionItem>
       <AccordionButton>
-        <Flex justifyContent='space-between' alignItems='center' w='100%' mr='20px'>
-          <Checkbox isChecked={todo.completed} onChange={() => {
-            handleCompleted(todo);
-          }} />
-          <Text w='250px'>
+        <Grid templateColumns='1.5fr 0.5fr 0.5fr 0.3fr' gap='16px' w='100%' mr='20px'>
+          <GridItem as={Text} align='left' justifySelf='flex-start' alignSelf='center'>
             {todo.name}
-          </Text>
-
-          <Badge variant={todo.priority}>
-            {todo.priority}
-          </Badge>
-
-          <Text>
+          </GridItem>
+          <GridItem justifySelf='flex-start' alignSelf='center'>
+            <Badge variant={todo.priority}>
+              {todo.priority}
+            </Badge>
+          </GridItem>
+          <GridItem as={Text} justifySelf='flex-start' alignSelf='center'>
             {new Date(todo.deadline).toLocaleDateString()}
-          </Text>
-        </Flex>
+          </GridItem>
+          <GridItem justifySelf='flex-start' alignSelf='center'>
+            <Checkbox isChecked={todo.completed} onChange={() => {
+              handleCompleted(todo);
+            }} />
+          </GridItem>
+        </Grid>
         <Spacer />
         <AccordionIcon />
       </AccordionButton>

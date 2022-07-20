@@ -1,4 +1,4 @@
-import { Accordion, Flex, Text } from '@chakra-ui/react';
+import { Accordion, Flex, Grid, GridItem, Text } from '@chakra-ui/react';
 import { TodoItem } from '../../../components/Todo/TodoItem';
 import { ITodo } from '../../../models/Todo/todo.model';
 
@@ -12,20 +12,20 @@ export function TodoList({
   return (
     <>
       <Flex flexDir='column'>
-        <Flex justifyContent='space-between' py='8px' px='16px'>
-          <Text>
-            Done
-          </Text>
-          <Text w='250px'>
+        <Grid templateColumns='1.5fr 0.5fr 0.5fr 0.3fr' gap='16px' py='8px' pl='16px' pr='56px' w='100%'>
+          <GridItem as={Text}>
             Title
-          </Text>
-          <Text>
+          </GridItem>
+          <GridItem as={Text}>
             Priority
-          </Text>
-          <Text>
+          </GridItem>
+          <GridItem as={Text}>
             Deadline
-          </Text>
-        </Flex>
+          </GridItem>
+          <GridItem as={Text}>
+            Done
+          </GridItem>
+        </Grid>
         <Accordion allowToggle>
           {
             todos.map(todo => (

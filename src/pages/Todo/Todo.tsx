@@ -211,10 +211,6 @@ export function Todo() {
                 </Flex>
             }
 
-            <Button onClick={() => setIsLoading(true)}>
-              Refresh
-            </Button>
-
             <CustomDrawer
               isOpen={(operation === TodoOperations.ADD || operation === TodoOperations.EDIT) && isOpen}
               onClose={onClose}
