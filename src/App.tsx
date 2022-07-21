@@ -1,13 +1,13 @@
 import React, { useEffect, useState } from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate, Outlet } from 'react-router-dom';
-import { Flex, Spinner } from '@chakra-ui/react';
+import { Flex, Spinner, useMediaQuery } from '@chakra-ui/react';
 
 import { ProtectedRoute } from './components/Auth/ProtectedRoute';
 import { LoginContext } from './context/LoginContext';
 import { IUser } from './models/User/user.model';
 import { Dashboard, Login, Register, Teams, Todo } from './pages';
 import { getUserInfo } from './services/user.service';
-import { NavBar } from './components';
+import { MobileNavBar, NavBar } from './components';
 
 function App() {
   const [user, setUser] = useState<IUser | null>();
@@ -74,9 +74,14 @@ function App() {
 export default App;
 
 function AppContainer() {
+  const isMobile = useMediaQuery('(max-width: 768px)');
   return (
     <Flex h='100vh' w='100vw' overflow='hidden'>
-      <NavBar />
+      {
+        isMobile[0]
+          ? <MobileNavBar />
+          : <NavBar />
+      }
       <Outlet />
     </Flex>
   );
