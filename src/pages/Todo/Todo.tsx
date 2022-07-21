@@ -1,6 +1,6 @@
 import React, { useContext, useEffect, useState } from 'react';
 
-import { Box, Button, Flex, useDisclosure, Text, useToast, Spinner } from '@chakra-ui/react';
+import { Button, Flex, useDisclosure, Text, useToast, Spinner } from '@chakra-ui/react';
 import { AddIcon } from '@chakra-ui/icons';
 
 import { CustomConfetti } from '../../components';
@@ -161,12 +161,12 @@ export function Todo() {
     }}>
       {
         isLoading
-          ? <Flex flexDir='column' justify='center' align='center' h='100vh'>
+          ? <Flex flexDir='column' justify='center' align='center' h='100%' overflowY='auto'>
             <Text>Getting Todos</Text>
             <Spinner />
           </Flex>
           : <Flex
-            minH='100vh'
+            h='100%'
             flexDir='column'
             justifyContent='center'
             alignItems='center'
@@ -174,8 +174,7 @@ export function Todo() {
           >
             {
               todos.length >= 1
-                ? <Box w='800px'>
-                  <Flex flexDir='column' alignItems='flex-end' w='800px'>
+                ? <Flex flexDir='column' alignItems='flex-end'>
                     <Button
                       bgColor='blue.500'
                       _hover={{ bgColor: 'blue.700' }}
@@ -188,9 +187,8 @@ export function Todo() {
                     >
                       Add ToDo
                     </Button>
+                    <TodoList todos={todos} />
                   </Flex>
-                  <TodoList todos={todos} />
-                </Box>
                 : <Flex flexDir='column' alignItems='center'>
                   <CustomConfetti />
                   <Text>

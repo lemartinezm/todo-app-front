@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route, Navigate, Outlet } from 'react-router-dom';
 import { Flex, Spinner } from '@chakra-ui/react';
 
 import { ProtectedRoute } from './components/Auth/ProtectedRoute';
@@ -52,25 +52,32 @@ function App() {
             <Spinner />
           </Flex>
           : <Router>
-            <Flex h='100vh' w='100%'>
-              <NavBar />
-              <Routes>
-                <Route element={<ProtectedRoute />}>
+            <Routes>
+              <Route element={<ProtectedRoute />}>
+                <Route element={<AppContainer />}>
                   <Route path='todos/*' element={<Todo />} />
                   <Route path='dashboard/*' element={<Dashboard />} />
                   <Route path='teams/*' element={<Teams />} />
                 </Route>
+              </Route>
 
-                <Route path='login' element={<Login />} />
-                <Route path='register' element={<Register />} />
-                <Route path='*' element={<Navigate to='/dashboard' />} />
-              </Routes>
-            </Flex>
+              <Route path='login' element={<Login />} />
+              <Route path='register' element={<Register />} />
+              <Route path='*' element={<Navigate to='/dashboard' />} />
+            </Routes>
           </Router>
-
       }
     </LoginContext.Provider>
   );
 }
 
 export default App;
+
+function AppContainer() {
+  return (
+    <Flex h='100vh' w='100vw' overflow='hidden'>
+      <NavBar />
+      <Outlet />
+    </Flex>
+  );
+}
