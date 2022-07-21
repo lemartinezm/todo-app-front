@@ -5,8 +5,9 @@ import { Flex, Spinner } from '@chakra-ui/react';
 import { ProtectedRoute } from './components/Auth/ProtectedRoute';
 import { LoginContext } from './context/LoginContext';
 import { IUser } from './models/User/user.model';
-import { Dashboard, Login, Register, Todo } from './pages';
+import { Dashboard, Login, Register, Teams, Todo } from './pages';
 import { getUserInfo } from './services/user.service';
+import { NavBar } from './components';
 
 function App() {
   const [user, setUser] = useState<IUser | null>();
@@ -51,19 +52,23 @@ function App() {
             <Spinner />
           </Flex>
           : <Router>
-            <Routes>
-              <Route element={<ProtectedRoute />}>
-                <Route path='todo/*' element={<Todo />} />
-                <Route path='dashboard/*' element={<Dashboard />} />
-              </Route>
+            <Flex h='100vh' w='100%'>
+              <NavBar />
+              <Routes>
+                <Route element={<ProtectedRoute />}>
+                  <Route path='todos/*' element={<Todo />} />
+                  <Route path='dashboard/*' element={<Dashboard />} />
+                  <Route path='teams/*' element={<Teams />} />
+                </Route>
 
-              <Route path='login' element={<Login />} />
-              <Route path='register' element={<Register />} />
-              <Route path='*' element={<Navigate to='/dashboard' />} />
-            </Routes>
+                <Route path='login' element={<Login />} />
+                <Route path='register' element={<Register />} />
+                <Route path='*' element={<Navigate to='/dashboard' />} />
+              </Routes>
+            </Flex>
           </Router>
-      }
 
+      }
     </LoginContext.Provider>
   );
 }
