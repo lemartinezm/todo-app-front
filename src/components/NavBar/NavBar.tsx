@@ -60,7 +60,7 @@ export function ItemBar({ label, icon, to, onClick = () => {} }: ItemBarProps) {
         navigate(to);
         onClick();
       }}
-      whileHover={{ color: '#ff13aa' }}
+      whileHover={{ color: '#ffffff' }}
       // @ts-ignore
       transition={{ duration: 0.2 }}
       fontSize='xl'
