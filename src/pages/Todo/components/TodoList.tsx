@@ -1,4 +1,4 @@
-import { Accordion, Button, ButtonGroup, Flex, Grid, GridItem, IconButton, Text } from '@chakra-ui/react';
+import { Accordion, Button, ButtonGroup, Flex, Grid, GridItem, IconButton, Select, Text } from '@chakra-ui/react';
 import { FiChevronLeft, FiChevronRight, FiChevronsLeft, FiChevronsRight } from 'react-icons/fi';
 import { TodoItem } from '../../../components/Todo/TodoItem';
 import { ITodo, Meta } from '../../../models/Todo/todo.model';
@@ -42,7 +42,10 @@ export function TodoList({
       </Accordion >
 
       {/* Pagination */}
-      <Flex justify='center'>
+      <Flex justify='space-between'>
+        <Text>
+          Showing {todos.length} of {meta.totalDocuments}
+        </Text>
         <ButtonGroup>
           <IconButton
             aria-label='First page'
@@ -85,6 +88,20 @@ export function TodoList({
             onClick={() => onUpdatePagination(meta.totalPages)}
           />
         </ButtonGroup>
+        <Flex>
+          <Select value={meta.currentPage} onChange={(e) => {
+            e.preventDefault();
+            onUpdatePagination(parseInt(e.target.value));
+          }} >
+            {
+              [...Array(meta.totalPages)].map((x, i) => (
+                <option key={`option-${i}`} value={i + 1}>
+                  {i + 1}
+                </option>
+              ))
+            }
+          </Select>
+        </Flex>
       </Flex>
 
     </Flex>
