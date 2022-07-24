@@ -6,7 +6,7 @@ import { AddIcon } from '@chakra-ui/icons';
 import { CustomConfetti } from '../../components';
 import { CustomDrawer } from '../../components/Drawer/CustomDrawer';
 
-import { ITodo, TodoPriority } from '../../models/Todo/todo.model';
+import { ITodo, Meta, TodoPriority } from '../../models/Todo/todo.model';
 import { TodoList, EditTodoForm, ConfirmDelete, NewTodoForm } from './components';
 import { createTodo, deleteTodoById, getMyTodos, updateTodoById } from '../../services/todo.service';
 import { LoginContext } from '../../context/LoginContext';
@@ -48,15 +48,22 @@ export const todoContext = React.createContext<ITodoContext>({
 export function Todo() {
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [todos, setTodos] = useState<ITodo[]>(initialTodos);
+  const [meta, setMeta] = useState<Meta>({
+    currentPage: 1,
+    documentsPerPage: 1,
+    totalDocuments: 1,
+    totalPages: 1
+  });
   const [operation, setOperation] = useState<TodoOperations>(TodoOperations.ADD);
   const { isOpen, onOpen, onClose } = useDisclosure();
   const { token } = useContext(LoginContext);
   const toast = useToast();
 
   useEffect(() => {
-    getMyTodos(token)
+    getMyTodos(token, undefined, meta.currentPage)
       .then((res: ITodoResponse) => {
         setTodos(res.todos ? res.todos : []);
+        setMeta(res.todos ? res.meta : {});
         setIsLoading(false);
         clearTimeout(); // TODO: corregir el error de timeout que se muestra en consola aún si la petición es exitosa
       })
@@ -150,6 +157,13 @@ export function Todo() {
       });
   }
 
+  function handleUpdatePagination(toPage: number) {
+    const temp = { ...meta };
+    temp.currentPage = toPage;
+    setMeta(temp);
+    setIsLoading(true);
+  }
+
   return (
     <todoContext.Provider value={{
       todos,
@@ -161,7 +175,7 @@ export function Todo() {
     }}>
       {
         isLoading
-          ? <Flex flexDir='column' justify='center' align='center' h='100%' overflowY='auto'>
+          ? <Flex flexDir='column' justify='center' align='center' h='100%' w='100%' overflowY='auto'>
             <Text>Getting Todos</Text>
             <Spinner />
           </Flex>
@@ -171,24 +185,25 @@ export function Todo() {
             justifyContent='center'
             alignItems='center'
             w='100%'
+            overflowY='auto'
           >
             {
               todos.length >= 1
-                ? <Flex flexDir='column' alignItems='flex-end'>
-                    <Button
-                      bgColor='blue.500'
-                      _hover={{ bgColor: 'blue.700' }}
-                      leftIcon={<AddIcon />}
-                      w='fit-content'
-                      onClick={() => {
-                        setOperation(TodoOperations.ADD);
-                        onOpen();
-                      }}
-                    >
-                      Add ToDo
-                    </Button>
-                    <TodoList todos={todos} />
-                  </Flex>
+                ? <Flex flexDir='column' justify='center' w='100%' h='100%' px='16px' overflow='auto'> {/* TODO: arreglar overflow que involucra el boton */}
+                  <Button
+                    bgColor='blue.500'
+                    _hover={{ bgColor: 'blue.700' }}
+                    leftIcon={<AddIcon />}
+                    w='fit-content'
+                    onClick={() => {
+                      setOperation(TodoOperations.ADD);
+                      onOpen();
+                    }}
+                  >
+                    Add ToDo
+                  </Button>
+                  <TodoList todos={todos} meta={meta} onUpdatePagination={handleUpdatePagination} />
+                </Flex>
                 : <Flex flexDir='column' alignItems='center'>
                   <CustomConfetti />
                   <Text>

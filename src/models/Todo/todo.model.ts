@@ -16,3 +16,10 @@ export interface ITodo {
   creator: string | number,
   __v: number
 };
+
+export interface Meta {
+  currentPage: number,
+  documentsPerPage: number
+  totalDocuments: number,
+  totalPages: number
+}
