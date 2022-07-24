@@ -15,7 +15,7 @@ export function TodoList({
   onUpdatePagination = () => { }
 }: TodoListProps) {
   return (
-    <Flex flexDir='column' w='100%' >
+    <Flex flexDir='column' w='100%' maxH='calc(100% - 56px)' overflowY='auto'>
       <Grid templateColumns='1.5fr 0.5fr 0.5fr 0.3fr' gap='16px' py='8px' pl='16px' pr='56px' w='100%'>
         <GridItem as={Text}>
           Title

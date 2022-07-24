@@ -186,10 +186,19 @@ export function Todo() {
             alignItems='center'
             w='100%'
             overflowY='auto'
+            boxSizing='border-box'
           >
             {
               todos.length >= 1
-                ? <Flex flexDir='column' justify='center' w='100%' h='100%' px='16px' overflow='auto'> {/* TODO: arreglar overflow que involucra el boton */}
+                ? <Flex
+                  flexDir='column'
+                  justify='center'
+                  w='100%'
+                  h='100%'
+                  px='16px'
+                  gap='16px'
+                  overflow='auto'
+                >
                   <Button
                     bgColor='blue.500'
                     _hover={{ bgColor: 'blue.700' }}
