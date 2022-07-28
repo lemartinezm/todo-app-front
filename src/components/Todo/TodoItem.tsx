@@ -1,20 +1,25 @@
 import { DeleteIcon, EditIcon } from '@chakra-ui/icons';
 import { AccordionButton, AccordionIcon, AccordionItem, AccordionPanel, Badge, Button, ButtonGroup, Checkbox, Grid, GridItem, Spacer, Text } from '@chakra-ui/react';
-import { useContext } from 'react';
 import { ITodo } from '../../models/Todo/todo.model';
-import { todoContext, TodoOperations } from '../../pages/Todo/Todo';
 
 export type TodoItemProps = {
   /**
    * Todo to print
    */
-  todo: ITodo
+  todo: ITodo;
+  onOpen: any;
+  onOpenModal: any;
+  setTodoToUpdate: any;
+  handleCompleted: any;
 }
 
 export function TodoItem({
-  todo
+  todo,
+  onOpen,
+  onOpenModal,
+  setTodoToUpdate,
+  handleCompleted
 }: TodoItemProps) {
-  const { setOperation, setTodoToUpdate, onOpen, handleCompleted } = useContext(todoContext); // For drawer and updates defined in the parent (TodoPage)
   return (
     <AccordionItem>
       <AccordionButton>
@@ -48,7 +53,6 @@ export function TodoItem({
             _hover={{ bgColor: 'blue.700' }}
             leftIcon={<EditIcon />}
             onClick={() => {
-              setOperation(TodoOperations.EDIT);
               onOpen();
               setTodoToUpdate(todo);
             }}
@@ -60,8 +64,7 @@ export function TodoItem({
             bgColor='red.500'
             _hover={{ bgColor: 'red.700' }}
             onClick={() => {
-              setOperation(TodoOperations.DELETE);
-              onOpen();
+              onOpenModal();
               setTodoToUpdate(todo);
             }}
           >
