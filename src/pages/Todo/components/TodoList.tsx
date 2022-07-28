@@ -90,7 +90,7 @@ export function TodoList({
         const index: number = temp.indexOf(todoToUpdate);
         temp.splice(index, 1);
         setTodos(temp);
-        onClose();
+        onCloseModal();
         SuccessToast(toast, res.message);
       })
       .catch(err => {
