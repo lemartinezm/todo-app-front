@@ -1,14 +1,15 @@
 /**
  * Inputs for use with Formik
  */
-import { CalendarIcon, ViewIcon } from '@chakra-ui/icons';
-import { FormControl, FormErrorMessage, FormLabel, Input, InputGroup, InputRightElement, Select, Textarea } from '@chakra-ui/react';
+import { AddIcon, CalendarIcon, ViewIcon } from '@chakra-ui/icons';
+import { Flex, FormControl, FormErrorMessage, FormLabel, Icon, Input, InputGroup, InputRightElement, ListItem, Select, Text, Textarea, UnorderedList } from '@chakra-ui/react';
 import { Field, FieldProps } from 'formik';
 import { useState } from 'react';
 import DatePicker from 'react-datepicker';
 
 // Styles for date picker
 import 'react-datepicker/dist/react-datepicker.css';
+import { BiX } from 'react-icons/bi';
 
 export type FormTextInputProps = {
   name: string,
@@ -171,6 +172,93 @@ export function FormDatePicker({
               ? <FormErrorMessage>{error}</FormErrorMessage>
               : null
           }
+        </FormControl>
+      )}
+    </Field>
+  );
+}
+
+export type FormMultiTextProps = {
+  name: string,
+  label: string,
+  placeholder: string
+}
+
+export function FormMultiText({
+  name,
+  label,
+  placeholder
+}: FormMultiTextProps) {
+  const [tempValue, setTempValue] = useState<string>('');
+
+  function handleAddItem(name: string, fieldValue: string[], setFieldValue: any) {
+    const temp = [...fieldValue];
+    temp.push(tempValue);
+    setFieldValue(name, temp);
+    setTempValue('');
+  }
+
+  function handleDeleteItem(name: string, index: number, fieldValue: string[], setFieldValue: any) {
+    const temp = [...fieldValue];
+    temp.splice(index, 1);
+    setFieldValue(name, temp);
+  }
+
+  function handleOnKeyDown(e: any, name: string, fieldValue: string[], setFieldValue: any) {
+    if (e.key === 'Enter') {
+      e.preventDefault();
+      handleAddItem(name, fieldValue, setFieldValue);
+    }
+  }
+
+  return (
+    <Field name={name} >
+      {({ form: { setFieldValue }, meta: { error, touched }, field: { value: fieldValue } }: FieldProps) => (
+        <FormControl isInvalid={!!error && touched}>
+          <FormLabel>
+            {label}
+          </FormLabel>
+          <InputGroup>
+            <Input
+              id={name}
+              type='text'
+              value={tempValue}
+              placeholder={placeholder}
+              onChange={(e) => setTempValue(e.target.value)}
+              onKeyDown={(e) => handleOnKeyDown(e, name, fieldValue, setFieldValue)}
+            />
+
+            <InputRightElement onClick={() => handleAddItem(name, fieldValue, setFieldValue)} cursor='pointer' >
+              <AddIcon />
+            </InputRightElement>
+
+          </InputGroup>
+
+          {
+            touched && !!error
+              ? <FormErrorMessage>{error}</FormErrorMessage>
+              : null
+          }
+
+          <Flex ml='16px'>
+            <UnorderedList>
+              {
+                fieldValue.map((item: string, index: number) => (
+                  <ListItem key={`item-${index}`}>
+                    <Text display='flex' justifyContent='space-between' alignItems='center'>
+                      {item}
+                      <Icon
+                        as={BiX}
+                        onClick={() => handleDeleteItem(name, index, fieldValue, setFieldValue)}
+                        cursor='pointer'
+                        ml='5px'
+                      />
+                    </Text>
+                  </ListItem>
+                ))
+              }
+            </UnorderedList>
+          </Flex>
         </FormControl>
       )}
     </Field>

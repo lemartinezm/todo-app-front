@@ -42,18 +42,18 @@ export function Teams() {
             <Spinner />
           </Flex>
           : <Flex gap='16px' w='100%'>
-            <Flex flexDir='column' gap='16px' p='16px'>
+            <Flex flexDir='column' w='270px' gap='16px' p='16px' overflowY='auto' overflowX='hidden' boxSizing='border-box'>
               <Button
                 bgColor='blue.500'
                 _hover={{ bgColor: 'blue.700' }}
                 leftIcon={<AddIcon />}
-                w='fit-content'
+                px='16px'
+                minH='40px'
                 onClick={() => {
-                  console.log('onClick');
                   onOpen();
                 }}
               >
-                Create New Team
+                Create Team
               </Button>
               {
                 teams.map((team, index) => (
@@ -64,15 +64,8 @@ export function Teams() {
                   />
                 ))
               }
-
-              <CustomDrawer
-                isOpen={isOpen}
-                onClose={onClose}
-                title={'Create Team'}
-              >
-                <NewTeamForm onSubmit={handleSubmit} />
-              </CustomDrawer>
             </Flex>
+
             {
               currentTeam
                 ? <TeamDescription team={currentTeam} />
@@ -80,6 +73,14 @@ export function Teams() {
                   Select a Team
                 </Flex>
             }
+
+            <CustomDrawer
+              isOpen={isOpen}
+              onClose={onClose}
+              title={'Create Team'}
+            >
+              <NewTeamForm onSubmit={handleSubmit} />
+            </CustomDrawer>
           </Flex>
       }
     </>

@@ -1,18 +1,18 @@
 import { Button, Flex } from '@chakra-ui/react';
 import { Form, Formik } from 'formik';
 import * as Yup from 'yup';
-import { FormTextInput } from '../../../components/Inputs/FormInputs';
+import { FormMultiText, FormTextInput } from '../../../components/Inputs/FormInputs';
 
 const initialValues: any = {
   teamName: '',
-  participants: '',
-  todos: ''
+  participants: [],
+  todos: []
 };
 
 const validationSchema = Yup.object().shape({
   teamName: Yup.string().required('Name is required'),
-  participants: Yup.string().nullable(),
-  todos: Yup.string().nullable()
+  participants: Yup.array().nullable(),
+  todos: Yup.array().nullable()
 });
 
 export type NewTeamFormProps = {
@@ -37,18 +37,16 @@ export function NewTeamForm({
             type='text'
           />
 
-          <FormTextInput
+          <FormMultiText
             name='participants'
             label='Participants'
-            placeholder='Write the participant ID'
-            type='text'
+            placeholder='Write username to add'
           />
 
-          <FormTextInput
+          <FormMultiText
             name='todos'
             label='Todos'
-            placeholder='Write the todos ID'
-            type='text'
+            placeholder='Write todo ID to add'
           />
 
           <Button type='submit'>

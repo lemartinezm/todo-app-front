@@ -16,7 +16,7 @@ export function TeamDescription({ team }: TeamDescriptionProps) {
   }, [team]);
 
   return (
-    <Flex flexDir='column' pt='16px'>
+    <Flex flexDir='column' pt='16px' px='16px' w='100%'>
       <Text fontSize='2xl' >
         {team.name}
       </Text>
