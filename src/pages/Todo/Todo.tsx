@@ -6,9 +6,9 @@ import { AddIcon } from '@chakra-ui/icons';
 import { CustomConfetti } from '../../components';
 import { CustomDrawer } from '../../components/Drawer/CustomDrawer';
 
-import { ITodo, Meta, TodoPriority } from '../../models/Todo/todo.model';
-import { TodoList, EditTodoForm, ConfirmDelete, NewTodoForm } from './components';
-import { createTodo, deleteTodoById, getMyTodos, updateTodoById } from '../../services/todo.service';
+import { ITodo, Meta } from '../../models/Todo/todo.model';
+import { TodoList, NewTodoForm } from './components';
+import { createTodo, getMyTodos } from '../../services/todo.service';
 import { LoginContext } from '../../context/LoginContext';
 import { ErrorToast, SuccessToast } from '../../utils';
 import { ITodoResponse } from '../../services/interfaces/todo';
@@ -54,7 +54,6 @@ export function Todo() {
     totalDocuments: 1,
     totalPages: 1
   });
-  const [operation, setOperation] = useState<TodoOperations>(TodoOperations.ADD);
   const { isOpen, onOpen, onClose } = useDisclosure();
   const { token } = useContext(LoginContext);
   const toast = useToast();
@@ -69,36 +68,6 @@ export function Todo() {
       })
       .catch(err => console.log(err));
   }, [isLoading]);
-
-  // For update the todo
-  const [todoToUpdate, setTodoToUpdate] = useState<ITodo>({
-    _id: '',
-    name: '',
-    description: '',
-    createdAt: new Date(),
-    deadline: new Date(),
-    completed: false,
-    creator: 'Unknown',
-    priority: TodoPriority.NORMAL,
-    __v: 1
-  });
-
-  // For setCompleted
-  async function handleCompleted(todoCompleted: any) {
-    await updateTodoById(todoCompleted._id, {
-      completed: !todoCompleted.completed
-    }, token)
-      .then(res => {
-        const temp: ITodo[] = [...todos];
-        const index: number = temp.indexOf(todoCompleted);
-        temp[index].completed = !temp[index].completed;
-        setTodos(temp);
-        SuccessToast(toast, res.message);
-      })
-      .catch(err => {
-        ErrorToast(toast, err.response.data.message);
-      });
-  }
 
   // For create ToDo
   async function handleCreateTodo(values: any) {
@@ -118,45 +87,6 @@ export function Todo() {
       });
   }
 
-  // For update ToDo
-  async function handleUpdateTodo(values: any) {
-    await updateTodoById(todoToUpdate._id, {
-      name: values.name,
-      description: values.description,
-      deadline: values.deadline,
-      priority: values.priority
-    }, token)
-      .then(res => {
-        const temp: ITodo[] = [...todos];
-        const index = temp.indexOf(todoToUpdate);
-        temp[index].name = values.name;
-        temp[index].description = values.description;
-        temp[index].priority = values.priority;
-        temp[index].deadline = values.deadline;
-        setTodos(temp);
-        onClose();
-        SuccessToast(toast, res.message);
-      })
-      .catch(err => {
-        ErrorToast(toast, err.response.data.message);
-      });
-  }
-
-  async function handleDeleteTodo() {
-    await deleteTodoById(token, todoToUpdate._id)
-      .then(res => {
-        const temp: ITodo[] = [...todos];
-        const index: number = temp.indexOf(todoToUpdate);
-        temp.splice(index, 1);
-        setTodos(temp);
-        onClose();
-        SuccessToast(toast, res.message);
-      })
-      .catch(err => {
-        ErrorToast(toast, err.response.data.message);
-      });
-  }
-
   function handleUpdatePagination(toPage: number) {
     const temp = { ...meta };
     temp.currentPage = toPage;
@@ -165,14 +95,7 @@ export function Todo() {
   }
 
   return (
-    <todoContext.Provider value={{
-      todos,
-      setTodos,
-      onOpen,
-      setOperation,
-      setTodoToUpdate,
-      handleCompleted
-    }}>
+    <>
       {
         isLoading
           ? <Flex flexDir='column' justify='center' align='center' h='100%' w='100%' overflowY='auto'>
@@ -186,23 +109,31 @@ export function Todo() {
             alignItems='center'
             w='100%'
             overflowY='auto'
+            boxSizing='border-box'
           >
             {
               todos.length >= 1
-                ? <Flex flexDir='column' justify='center' w='100%' h='100%' px='16px' overflow='auto'> {/* TODO: arreglar overflow que involucra el boton */}
+                ? <Flex
+                  flexDir='column'
+                  justify='center'
+                  w='100%'
+                  h='100%'
+                  px='16px'
+                  gap='16px'
+                  overflow='auto'
+                >
                   <Button
                     bgColor='blue.500'
                     _hover={{ bgColor: 'blue.700' }}
                     leftIcon={<AddIcon />}
                     w='fit-content'
                     onClick={() => {
-                      setOperation(TodoOperations.ADD);
                       onOpen();
                     }}
                   >
                     Add ToDo
                   </Button>
-                  <TodoList todos={todos} meta={meta} onUpdatePagination={handleUpdatePagination} />
+                  <TodoList todos={todos} setTodos={setTodos} meta={meta} onUpdatePagination={handleUpdatePagination} />
                 </Flex>
                 : <Flex flexDir='column' alignItems='center'>
                   <CustomConfetti />
@@ -215,7 +146,6 @@ export function Todo() {
                     leftIcon={<AddIcon />}
                     w='fit-content'
                     onClick={() => {
-                      setOperation(TodoOperations.ADD);
                       onOpen();
                     }}
                   >
@@ -225,37 +155,15 @@ export function Todo() {
             }
 
             <CustomDrawer
-              isOpen={(operation === TodoOperations.ADD || operation === TodoOperations.EDIT) && isOpen}
+              isOpen={isOpen}
               onClose={onClose}
-              title={`${operation === TodoOperations.ADD ? 'New' : 'Edit'} ToDo`}
+              title='Create New ToDo'
             >
-              {
-                renderForm(operation, todoToUpdate, handleCreateTodo, handleUpdateTodo)
-              }
+              <NewTodoForm onSubmit={handleCreateTodo} />
             </CustomDrawer>
-
-            <ConfirmDelete
-              isOpen={operation === 'delete' && isOpen}
-              onClose={onClose}
-              onDelete={handleDeleteTodo}
-            />
           </Flex>
       }
-    </todoContext.Provider>
+    </>
 
   );
 };
-
-/**
- * Conditional render for forms
- * @param operation
- * @param todoToUpdate
- * @param onCreate
- * @param onUpdate
- * @returns
- */
-function renderForm(operation: string, todoToUpdate: ITodo, onCreate: (values: any) => any, onUpdate: (values: any) => any) {
-  if (operation === TodoOperations.ADD) return <NewTodoForm onSubmit={onCreate} />;
-  else if (operation === TodoOperations.EDIT) return <EditTodoForm todoToUpdate={todoToUpdate} onSubmit={onUpdate} />;
-  else return null;
-}
