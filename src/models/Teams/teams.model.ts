@@ -4,6 +4,7 @@ export interface ITeam {
   leader: string,
   participants: any[],
   todos: any[],
+  meta?: any,
   __v: number
 }
 

@@ -1,18 +1,19 @@
 import { Flex, Text } from '@chakra-ui/react';
+import { ITeam } from '../../models/Teams/teams.model';
 
 export type TeamItemProps = {
-  team: any;
-  selectTeam: (e?: any) => any;
+  team: ITeam;
+  setTeamIndex: (e?: any) => any;
 }
 
-export function TeamItem({ team, selectTeam }: TeamItemProps) {
+export function TeamItem({ team, setTeamIndex }: TeamItemProps) {
   return (
     <Flex
       flexDir='column'
       rounded='5px'
       bgColor='gray.100'
       p='16px'
-      onClick={() => selectTeam(team)}
+      onClick={() => setTeamIndex()}
       cursor='pointer'
     >
       <Text fontSize='lg'>

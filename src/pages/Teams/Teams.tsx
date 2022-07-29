@@ -12,19 +12,20 @@ import { TeamDescription } from './components/TeamDescription';
 export function Teams() {
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [teams, setTeams] = useState<ITeam[]>([]);
-  const [currentTeam, setCurrentTeam] = useState<ITeam>();
+  const [teamIndex, setTeamIndex] = useState<number>();
+  const [currentPage, setCurrentPage] = useState<number>(1);
   const { token } = useContext(LoginContext);
   const { isOpen, onOpen, onClose } = useDisclosure();
 
   useEffect(() => {
-    getMyTeams(token)
+    getMyTeams(token, undefined, currentPage)
       .then((res: ITeamResponse) => {
         console.log(res);
         setTeams(res.teams ? res.teams : []);
         setIsLoading(false);
       })
       .catch(err => console.log(err));
-  }, [isLoading]);
+  }, [isLoading, currentPage]);
 
   function handleSubmit(values: any) {
     createNewTeam(token, values)
@@ -60,15 +61,15 @@ export function Teams() {
                   <TeamItem
                     key={`team-${index}`}
                     team={team}
-                    selectTeam={setCurrentTeam}
+                    setTeamIndex={() => setTeamIndex(index)}
                   />
                 ))
               }
             </Flex>
 
             {
-              currentTeam
-                ? <TeamDescription team={currentTeam} />
+              teamIndex !== undefined
+                ? <TeamDescription team={teams[teamIndex]} updateCurrentPage={setCurrentPage} />
                 : <Flex justify='center' align='center' w='100%' h='100%'>
                   Select a Team
                 </Flex>

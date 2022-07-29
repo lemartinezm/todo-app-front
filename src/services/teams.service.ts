@@ -2,10 +2,14 @@ import { AxiosResponse } from 'axios';
 import { ICreateTeam } from '../models/Teams/teams.model';
 import axios from './config/axios.config';
 
-export const getMyTeams = async (token: string) => {
+export const getMyTeams = async (token: string, documentsPerPage?: number, currentPage?: number) => {
   const response: AxiosResponse = await axios.get('/teams/me', {
     headers: {
       'x-access-token': token
+    },
+    params: {
+      documentsPerPage,
+      currentPage
     }
   });
 

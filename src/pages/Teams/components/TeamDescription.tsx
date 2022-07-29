@@ -5,10 +5,11 @@ import { ITodo } from '../../../models/Todo/todo.model';
 import { TodoList } from '../../Todo/components';
 
 export type TeamDescriptionProps = {
-  team: ITeam
+  team: ITeam;
+  updateCurrentPage: (e?: any) => any;
 }
 
-export function TeamDescription({ team }: TeamDescriptionProps) {
+export function TeamDescription({ team, updateCurrentPage }: TeamDescriptionProps) {
   const [todos, setTodos] = useState<ITodo[]>(team.todos);
 
   useEffect(() => {
@@ -26,12 +27,9 @@ export function TeamDescription({ team }: TeamDescriptionProps) {
       <TodoList
         todos={todos}
         setTodos={setTodos}
-        meta={{
-          currentPage: 1,
-          documentsPerPage: 1,
-          totalDocuments: 1,
-          totalPages: 1
-        }} />
+        meta={team.meta}
+        onUpdatePagination={(toPage: number) => updateCurrentPage(toPage)}
+        />
     </Flex>
   );
 }
