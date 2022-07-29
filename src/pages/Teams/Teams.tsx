@@ -20,7 +20,6 @@ export function Teams() {
   useEffect(() => {
     getMyTeams(token, undefined, currentPage)
       .then((res: ITeamResponse) => {
-        console.log(res);
         setTeams(res.teams ? res.teams : []);
         setIsLoading(false);
       })
