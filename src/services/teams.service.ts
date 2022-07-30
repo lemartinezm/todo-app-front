@@ -25,3 +25,13 @@ export const createNewTeam = async (token: string, newTeam: ICreateTeam) => {
 
   return response.data;
 };
+
+export const updateTeam = async (token: string, updatedTeam: any) => {
+  const response: AxiosResponse = await axios.put('/teams', updatedTeam, {
+    headers: {
+      'x-access-token': token
+    }
+  });
+
+  return response.data;
+};
