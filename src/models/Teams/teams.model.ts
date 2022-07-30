@@ -1,7 +1,7 @@
 export interface ITeam {
   _id: string,
   name: string,
-  leader: string,
+  leader: any,
   participants: any[],
   todos: any[],
   meta?: any,

@@ -25,3 +25,25 @@ export const createNewTeam = async (token: string, newTeam: ICreateTeam) => {
 
   return response.data;
 };
+
+export const updateTeam = async (token: string, updatedTeam: any) => {
+  const response: AxiosResponse = await axios.put('/teams', updatedTeam, {
+    headers: {
+      'x-access-token': token
+    }
+  });
+
+  return response.data;
+};
+
+export const deleteTeamById = async (token: string, teamId: string) => {
+  const response: AxiosResponse = await axios.delete('/teams', {
+    headers: {
+      'x-access-token': token
+    },
+    data: {
+      teamId
+    }
+  });
+  return response.data;
+};
