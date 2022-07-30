@@ -5,10 +5,11 @@ import { CustomDrawer } from '../../../components';
 import { LoginContext } from '../../../context/LoginContext';
 import { ITeam } from '../../../models/Teams/teams.model';
 import { ITodo } from '../../../models/Todo/todo.model';
-import { updateTeam } from '../../../services/teams.service';
+import { deleteTeamById, updateTeam } from '../../../services/teams.service';
 import { createTodo } from '../../../services/todo.service';
 import { ErrorToast, SuccessToast } from '../../../utils';
 import { NewTodoForm, TodoList } from '../../Todo/components';
+import { DeleteTeamModal } from './DeleteTeamModal';
 import { EditTeamForm } from './EditTeamForm';
 
 export type TeamDescriptionProps = {
@@ -21,7 +22,8 @@ export function TeamDescription({ team, updateCurrentPage, setIsLoading }: TeamD
   const [todos, setTodos] = useState<ITodo[]>(team.todos);
   const { isOpen, onOpen, onClose } = useDisclosure();
   const { isOpen: isOpenEditTeam, onOpen: onOpenEditTeam, onClose: onCloseEditTeam } = useDisclosure();
-  const { token } = useContext(LoginContext);
+  const { isOpen: isOpenDeleteTeam, onOpen: onOpenDeleteTeam, onClose: onCloseDeleteTeam } = useDisclosure();
+  const { token, user } = useContext(LoginContext);
   const toast = useToast();
 
   useEffect(() => {
@@ -58,6 +60,16 @@ export function TeamDescription({ team, updateCurrentPage, setIsLoading }: TeamD
         onCloseEditTeam();
         setIsLoading(true);
         SuccessToast(toast, res.message);
+      });
+  }
+
+  async function handleDeleteTeam() {
+    onCloseEditTeam();
+    await deleteTeamById(token, team._id)
+      .then(res => {
+        SuccessToast(toast, res.message);
+        onCloseDeleteTeam();
+        setIsLoading(true);
       });
   }
 
@@ -143,6 +155,7 @@ export function TeamDescription({ team, updateCurrentPage, setIsLoading }: TeamD
           </TabPanel>
         </TabPanels>
       </Tabs>
+
       <CustomDrawer
         isOpen={isOpen}
         onClose={onClose}
@@ -157,7 +170,27 @@ export function TeamDescription({ team, updateCurrentPage, setIsLoading }: TeamD
         title='Edit Team'
       >
         <EditTeamForm team={team} onSubmit={handleUpdateTeam} />
+        {
+          user?._id === team.leader._id
+            ? <Button
+              mt='16px'
+              w='100%'
+              onClick={() => {
+                onCloseEditTeam();
+                setTimeout(() => {
+                  onOpenDeleteTeam();
+                }, 250);
+              }}
+            >Delete Team</Button>
+            : null
+        }
       </CustomDrawer>
+
+      <DeleteTeamModal
+        isOpen={isOpenDeleteTeam}
+        onClose={onCloseDeleteTeam}
+        onDelete={handleDeleteTeam}
+      />
     </Flex>
   );
 }

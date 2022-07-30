@@ -35,3 +35,15 @@ export const updateTeam = async (token: string, updatedTeam: any) => {
 
   return response.data;
 };
+
+export const deleteTeamById = async (token: string, teamId: string) => {
+  const response: AxiosResponse = await axios.delete('/teams', {
+    headers: {
+      'x-access-token': token
+    },
+    data: {
+      teamId
+    }
+  });
+  return response.data;
+};
