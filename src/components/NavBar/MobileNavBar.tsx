@@ -12,7 +12,7 @@ export function MobileNavBar() {
   const { user } = useContext(LoginContext);
   return (
     <>
-      <Icon as={BiMenu} boxSize='25px' onClick={() => onOpen()} position='absolute' top='16px' left='16px' />
+      <Icon as={BiMenu} boxSize='25px' onClick={() => onOpen()} position='absolute' top='16px' left='16px' zIndex={20} />
 
       <Drawer
         isOpen={isOpen}
