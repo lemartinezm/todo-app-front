@@ -74,7 +74,7 @@ export function TeamDescription({ team, updateCurrentPage, setIsLoading }: TeamD
   }
 
   return (
-    <Flex flexDir='column' pt='16px' w='100%'>
+    <Flex flexDir='column' pt='16px' w='100%' h='calc(100% - 150px)'>
       <Text fontSize='2xl' display='flex' alignItems='center' >
         {team.name}
         {

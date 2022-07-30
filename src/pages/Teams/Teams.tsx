@@ -66,14 +66,24 @@ export function Teams() {
                     Create Team
                   </Button>
                 </Flex>
-                : <>
-                  <Flex flexDir='column' w='270px' gap='16px' p='16px' overflowY='auto' overflowX='hidden' boxSizing='border-box'>
+                : <Flex flexDir={{ base: 'column', md: 'row' }} w='100%'>
+                  <Flex
+                    flexDir={{ base: 'row', md: 'column' }}
+                    w={{ base: '100%', md: '270px' }}
+                    gap='16px'
+                    p='16px'
+                    overflowY='auto'
+                    overflowX={{ base: 'auto', md: 'hidden' }}
+                    align={{ base: 'center', md: 'flex-start' }}
+                    boxSizing='border-box'
+                  >
                     <Button
                       bgColor='blue.500'
                       _hover={{ bgColor: 'blue.700' }}
                       leftIcon={<AddIcon />}
                       px='16px'
                       minH='40px'
+                      minW={{ base: 'fit-content', md: '100%' }}
                       onClick={() => {
                         onOpen();
                       }}
@@ -102,7 +112,7 @@ export function Teams() {
                         Select a Team
                       </Flex>
                   }
-                </>
+                </Flex>
             }
 
             <CustomDrawer

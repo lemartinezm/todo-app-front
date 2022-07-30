@@ -15,6 +15,7 @@ export function TeamItem({ team, setTeamIndex }: TeamItemProps) {
       p='16px'
       onClick={() => setTeamIndex()}
       cursor='pointer'
+      minW={{ base: 'fit-content', md: '100%' }}
     >
       <Text fontSize='lg'>
         {team.name}
