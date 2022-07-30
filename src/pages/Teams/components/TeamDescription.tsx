@@ -76,16 +76,21 @@ export function TeamDescription({ team, updateCurrentPage, setIsLoading }: TeamD
   return (
     <Flex flexDir='column' pt='16px' w='100%'>
       <Text fontSize='2xl' display='flex' alignItems='center' >
-        {team.name} <EditIcon ml='16px' boxSize='16px' cursor='pointer' onClick={() => onOpenEditTeam()} />
+        {team.name}
+        {
+          team.leader._id === user?._id
+            ? <EditIcon ml='16px' boxSize='16px' cursor='pointer' onClick={() => onOpenEditTeam()} />
+            : null
+        }
       </Text>
 
-      <Tabs w='100%'>
+      <Tabs w='100%' h='calc(100% - 36px)'>
         <TabList>
           <Tab>Todos</Tab>
           <Tab>Participants</Tab>
         </TabList>
-        <TabPanels>
-          <TabPanel as={Flex} flexDir='column'>
+        <TabPanels h='calc(100% - 42px)'>
+          <TabPanel as={Flex} flexDir='column' h='100%' gap='16px'>
             {
               todos.length > 0
                 ? <>
@@ -128,7 +133,7 @@ export function TeamDescription({ team, updateCurrentPage, setIsLoading }: TeamD
                 </Flex>
             }
           </TabPanel>
-          <TabPanel as={Flex} flexDirection='column' gap='16px'>
+          <TabPanel as={Flex} flexDirection='column' gap='16px' h='100%' overflowY='auto'>
             <Grid fontWeight={500} templateColumns='0.3fr 1fr 1fr'>
               <GridItem></GridItem>
               <GridItem as={Text}>User</GridItem>
@@ -142,10 +147,10 @@ export function TeamDescription({ team, updateCurrentPage, setIsLoading }: TeamD
                       <Avatar name={participant.username} />
                     </GridItem>
                     <GridItem alignSelf='center'>
-                      <Text w='100px'>{participant.username}</Text>
+                      <Text>{participant.username}</Text>
                     </GridItem>
                     <GridItem alignSelf='center'>
-                      <Text w='200px'>{participant.email}</Text>
+                      <Text>{participant.email}</Text>
                     </GridItem>
                   </Grid>
                 ))
